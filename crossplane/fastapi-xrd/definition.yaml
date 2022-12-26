@@ -1,0 +1,39 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xfastapiinstances.apis.intility.no
+spec:
+  group: apis.intility.no
+  defaultCompositionRef:
+    name: xfastapiinstances.fastapi.apis.intility.no
+  names:
+    kind: XFastAPIInstance
+    plural: xfastapiinstances
+  claimNames:
+    kind: FastAPIInstance
+    plural: fastapiinstances
+  # connectionSecretKeys:
+  #   - username
+  #   - password
+  #   - endpoint
+  #   - port
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  image:
+                    type: string
+                required:
+                  - image
+            required:
+              - parameters

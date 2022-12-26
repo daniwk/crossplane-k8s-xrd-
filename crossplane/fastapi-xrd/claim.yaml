@@ -1,0 +1,8 @@
+apiVersion: apis.intility.no/v1alpha1
+kind: FastAPIInstance
+metadata:
+  namespace: myapp
+  name: my-fastapi
+spec:
+  parameters:
+    image: fastapi

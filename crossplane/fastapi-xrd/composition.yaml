@@ -1,0 +1,43 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xfastapiinstances.fastapi.apis.intility.no
+  labels:
+    provider: k8s
+    guide: quickstart
+spec:
+  writeConnectionSecretsToNamespace: crossplane-system
+  compositeTypeRef:
+    apiVersion: apis.intility.no/v1alpha1
+    kind: XFastAPIInstance
+  resources:
+    - name: deployment
+      base:
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: fastapi
+          namespace: myapp
+        spec:
+          selector:
+            matchLabels:
+              app: fastapi
+          template:
+            metadata:
+              labels:
+                app: fastapi
+            spec:
+              containers:
+              - name: fastapi
+                image: fastapi
+                resources:
+                  limits:
+                    memory: "128Mi"
+                    cpu: "500m"
+                ports:
+                - containerPort: 8000
+        patches:
+        - fromFieldPath: spec.parameters.image
+          toFieldPath: spec.template.spec.containers[0].image
+        # - fromFieldPath: metadata.namespace
+        #   toFieldPath: metadata.namespace
