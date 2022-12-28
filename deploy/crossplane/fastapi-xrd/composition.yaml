@@ -107,3 +107,97 @@ spec:
         toFieldPath: spec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.namespace
         toFieldPath: metadata.namespace
+
+    - name: argo-project
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        metadata:
+          namespace: ""
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: argoproj.io/v1alpha1
+              kind: AppProject
+              metadata:
+                name: ""
+                namespace: argocd
+              spec:
+                roles:
+                # A role which provides read-only access to all applications in the project
+                - name: admin
+                  description: admin privileges to Argo Project
+                  policies:
+                  - p, proj:my-project:read-only, applications, *, my-project/*, allow
+                  groups:
+                  - predefined-group
+                clusterResourceWhitelist:
+                - group: '*'
+                  kind: '*'
+                destinations:
+                - name: in-cluster
+                  namespace: ""
+                  server: 'https://kubernetes.default.svc'
+                - name: in-cluster
+                  namespace: argocd
+                  server: 'https://kubernetes.default.svc'
+                - name: in-cluster
+                  namespace: my-claims
+                  server: 'https://kubernetes.default.svc'
+                sourceRepos:
+                - ""
+          providerConfigRef:
+            name: kubernetes-provider
+      patches:
+      - fromFieldPath: spec.parameters.namespace
+        toFieldPath: metadata.namespace
+      - fromFieldPath: spec.parameters.namespace
+        toFieldPath: spec.forProvider.manifest.spec.destinations[0].namespace
+      - fromFieldPath: spec.parameters.repoUrl
+        toFieldPath: spec.forProvider.manifest.spec.sourceRepos[0]
+      - fromFieldPath: metadata.name
+        toFieldPath: spec.forProvider.manifest.metadata.name
+      - fromFieldPath: metadata.name
+        toFieldPath: spec.forProvider.manifest.spec.roles[0].policies[0]
+        transforms:
+          - type: string
+            string:
+              fmt: "p, proj:%[1]s:read-only, applications, get, %[1]s/*, allow"
+
+    - name: argo-app
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        metadata:
+          namespace: ""
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Application
+              metadata:
+                name: ""
+                namespace: argocd
+              spec:
+                project: ""
+                syncPolicy:
+                  automated: {}
+                destination:
+                  namespace: ""
+                  server: 'https://kubernetes.default.svc'
+                source:
+                  repoURL: ""
+                  path: "deploy/app"
+          providerConfigRef:
+            name: kubernetes-provider
+      patches:
+      - fromFieldPath: spec.parameters.namespace
+        toFieldPath: metadata.namespace
+      - fromFieldPath: spec.parameters.namespace
+        toFieldPath: spec.forProvider.manifest.spec.destination.namespace
+      - fromFieldPath: spec.parameters.repoUrl
+        toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+      - fromFieldPath: metadata.name
+        toFieldPath: spec.forProvider.manifest.metadata.name
+      - fromFieldPath: metadata.name
+        toFieldPath: spec.forProvider.manifest.spec.project

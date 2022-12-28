@@ -7,3 +7,4 @@ spec:
   parameters:
     image: web-api
     namespace: myapp
+    repoUrl: "https://github.com/daniwk/crossplane-k8s-xrd-.git"

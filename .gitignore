@@ -1,3 +1,4 @@
-crossplane/crossplane-system/charts/
+deploy/crossplane/crossplane-system/charts/
+deploy/argocd/charts
 .venv/
 app/.venv/
