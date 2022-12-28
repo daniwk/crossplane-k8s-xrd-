@@ -33,7 +33,10 @@ spec:
                 properties:
                   image:
                     type: string
+                  namespace:
+                    type: string
                 required:
                   - image
+                  - namespace
             required:
               - parameters

@@ -1,1 +1,3 @@
 crossplane/crossplane-system/charts/
+.venv/
+app/.venv/
