@@ -6,6 +6,8 @@ Can we use Crossplane to create a better developer experience?
 
 My goal here is to play around with Crossplane XRs to see if it can help us standardize and simplify the developer experience when it comes to deploying and managing own software. Can it create the same experience as Kubevela where developer with 1 manifest file creates the necessary, underlying infrastructure such as k8s Deployment, Service and Secrets, ArgoCD project and so on?
 
+![Diagram](logo/diagram.png)
+
 ## Preliminary conclusion
 By leveraging the Crossplane XR functionality in combination with the [Crossplane Kubernetes Provider](https://github.com/crossplane-contrib/provider-kubernetes) it's possible to greatly standardize, automate and simplify management of software infrastructure. This repo's XR creates the following:
  - [x] Namespace
@@ -25,7 +27,7 @@ Comments:
 
 ## Prerequisites
 
-See [local k8s development repo](https://github.com/daniwk/app-scaling-keda#prequisites).
+Install kind, ctlptl, kubectl, helm, docker, k9s and Tilt. For installation guide visit this [repo](https://github.com/daniwk/app-scaling-keda#prequisites).
 
 ## Create local cluster and install Crossplane
 
